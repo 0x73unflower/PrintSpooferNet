@@ -4,7 +4,7 @@
 
 Communication to the spooler service is done through Print System Remote Protocol (MS-RPRN). MS-RPRN works through named pipes and the pipe name used by the print spooler service is \pipe\spoolss. Vulnerabilities exist in RpcOpenPrinter and RpcRemoteFindFirstPrinterChangeNotification functions. Specifically, RpcOpenPrinter allows the retrieval of a handle for the printer server, which is used as an argument to the second API - RpcRemoteFindFirstPrinterChangeNotification which monitors printer object changes and sends change notifications to print clients. This change notification requires the print spooler to access the print client. 
 
-If we can create a pipe server that acts as a print client, we can obtain a SYSTEM token to which we can then impersonate.
+We can force the SYSTEM account to connect to a named pipe set up by us. The attack is based on the print spooler service, which runs in a SYSTEM context. The attack is based on the fact that the print spooler monitors printer object changes and sends change notifications to print clients by connecting to their respective named pipes. If we can create a process running with the SeImpersonatePrivilege privilege that simulates a print client (our named pipe server), we will obtain a SYSTEM token that we can impersonate.
 
 ## Exploit
 
